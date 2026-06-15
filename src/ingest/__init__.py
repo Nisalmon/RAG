@@ -12,5 +12,5 @@ __all__ = [
     "store_processed_data",
     "store_search_result",
     "get_most_accurate",
-    "get_index",
+    "get_index"
 ]

@@ -60,7 +60,6 @@ def load_chunks() -> List[MinimalSource]:
                 )
             )
         return chunks
-
     except (FileNotFoundError, PermissionError,
             json.JSONDecodeError, Exception) as e:
         print(e)

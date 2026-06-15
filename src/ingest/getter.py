@@ -1,6 +1,8 @@
 import bm25s
 from typing import List
 from src.classes import MinimalSource, UnansweredQuestion, MinimalSearchResults
+from sentence_transformers import CrossEncoder
+import tqdm
 
 
 def get_file_info(content, files: List[MinimalSource]):
@@ -48,11 +50,12 @@ def prompt_lst(prompts: List[UnansweredQuestion],
     indexes = []
     result = []
     retriever = bm25s.BM25.load("bm25_index", load_corpus=True, mmap=True)
-    for prompt in prompts:
+    reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
+    for prompt in tqdm.tqdm(prompts):
 
         prompt_token = bm25s.tokenize(prompt.question, stopwords=stopwords,
                                       show_progress=False, return_ids=False)
-        res = retriever.retrieve(prompt_token, k=k,
+        res = retriever.retrieve(prompt_token, k=20,
                                  show_progress=False)
 
         indexes.append(
@@ -61,10 +64,19 @@ def prompt_lst(prompts: List[UnansweredQuestion],
                 "prompt_id": prompt.question_id
             }
         )
+
+        # question_and_text = [(prompt.question, doc["text"])
+        #                      for doc in res.documents[0]]
+        # scores = reranker.predict(question_and_text)
+        # ranked_docs = sorted(
+        #     zip(scores, res.documents[0]), key=lambda x: x[0], reverse=True)
+        ranked_docs = res.documents[0]
+        top_docs = [doc for _, doc in ranked_docs[:k]]
+
         for i in range(k):
             indexes[ind].update({
                 f"section_{i + 1}": get_file_info(str(
-                    res.documents[0][i]['text']
+                    top_docs[i]["text"]
                     ), full_data)
             })
         result.append(

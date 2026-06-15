@@ -68,6 +68,7 @@ class CLI():
                         save_directory: str = "./") -> None:
         prompts = load_prompts(dataset_path)
         chunks = load_chunks()
+        start = time.time()
         retrievial = get_most_accurate(
             prompts,
             k,
@@ -77,6 +78,8 @@ class CLI():
             search_results=retrievial,
             k=k
         )
+        end = time.time()
+        print(round(end - start), "sec")
         store_search_result(student_search_result,
                             save_directory, dataset_path)
 
