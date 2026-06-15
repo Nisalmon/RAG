@@ -1,0 +1,29 @@
+[project]
+name = "rag-machine"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "annotated-types==0.7.0",
+    "astchunk==0.1.0",
+    "bm25s==0.3.9",
+    "numpy==2.2.6",
+    "pydantic==2.13.4",
+    "pydantic-core==2.46.4",
+    "pyrsistent==0.20.0",
+    "tqdm==4.67.3",
+    "tree-sitter==0.25.2",
+    "tree-sitter-c-sharp==0.23.5",
+    "tree-sitter-java==0.23.5",
+    "tree-sitter-python==0.25.0",
+    "tree-sitter-typescript==0.23.2",
+    "typing-extensions==4.15.0",
+    "typing-inspection==0.4.2",
+    "uv==0.11.18",
+    "transformers>=4.40.0",
+    "torch>=2.0.0",
+    "accelerate>=1.13.0",
+    "huggingface-hub>=0.20.0",
+    "flake8>=7.3.0",
+    "mypy>=1.19.1",
+    "fire"
+]
