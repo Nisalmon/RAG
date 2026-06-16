@@ -1,16 +1,17 @@
 from src.classes import MinimalSource
 from astchunk import ASTChunkBuilder
-from typing import List, Any
+from typing import List, Dict, Any
 
 
-def chunking(data: List[List[Any]], maxchunk: int):
-    chunk_lst = []
+def chunking(data: List[List[Dict[str, Any]]],
+             maxchunk: int) -> List[MinimalSource]:
+    chunk_lst: List[MinimalSource] = []
     chunk_python(data[0], chunk_lst, maxchunk)
     chunk_markdown(data[1], chunk_lst, maxchunk)
     return chunk_lst
 
 
-def chunk_python(data: List[List[Any]],
+def chunk_python(data: List[Dict[str, Any]],
                  lst: List[MinimalSource], maxchunk: int) -> None:
     config = {
          "max_chunk_size": min(maxchunk, 2000),
@@ -39,7 +40,7 @@ def chunk_python(data: List[List[Any]],
             )
 
 
-def chunk_markdown(data: List[List[Any]],
+def chunk_markdown(data: List[Dict[str, Any]],
                    lst: List[MinimalSource], maxchunk: int) -> None:
     for elem in data:
         ind = 0

@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Any
 from pathlib import Path
 from src.classes import (UnansweredQuestion,
                          MinimalSource,
@@ -8,7 +8,7 @@ import json
 
 
 def load_data() -> List[List[Dict[str, str]]]:
-    data = [[], []]
+    data: List[Any] = [[], []]
     res = Path("./data/raw/vllm-0.10.1")
     for file in res.rglob("*"):
         if file.suffix != ".py" and file.suffix != ".md":
@@ -67,7 +67,7 @@ def load_chunks() -> List[MinimalSource]:
 
 
 def load_dataset(file_path: str) -> List[MinimalSearchResults]:
-    result = []
+    result: List[MinimalSearchResults] = []
     try:
         data = []
         with open(file_path, "r") as f:

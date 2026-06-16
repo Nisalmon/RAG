@@ -1,11 +1,10 @@
 import bm25s
-from typing import List
+from typing import List, Dict, Any
 from src.classes import MinimalSource, UnansweredQuestion, MinimalSearchResults
-from sentence_transformers import CrossEncoder
 import tqdm
 
 
-def get_file_info(content, files: List[MinimalSource]):
+def get_file_info(content: str, files: List[MinimalSource]) -> Dict[str, Any]:
     for elem in files:
         if elem.text == content:
             return {
@@ -14,9 +13,10 @@ def get_file_info(content, files: List[MinimalSource]):
                 "last_character_index": elem.last_character_index,
                 "text": elem.text
             }
+    return {}
 
 
-def get_index(data: List[str]):
+def get_index(data: List[str]) -> None:
     data_tokens = bm25s.tokenize(data, show_progress=False)
     ind = bm25s.BM25(corpus=data)
     ind.index(data_tokens, show_progress=False)
@@ -24,7 +24,7 @@ def get_index(data: List[str]):
 
 
 def get_most_accurate(prompts: List[UnansweredQuestion] | str,
-                      k: int, full_data: List[MinimalSource]):
+                      k: int, full_data: List[MinimalSource]) -> List[Any]:
     retrieval = []
     stopwords = [
         "a", "an", "the"
@@ -34,7 +34,7 @@ def get_most_accurate(prompts: List[UnansweredQuestion] | str,
         return []
     if isinstance(prompts, str):
         prompts = [UnansweredQuestion(
-            question_id=1,
+            question_id="1",
             question=prompts
         )]
     if isinstance(prompts, List):
@@ -50,12 +50,11 @@ def prompt_lst(prompts: List[UnansweredQuestion],
     indexes = []
     result = []
     retriever = bm25s.BM25.load("bm25_index", load_corpus=True, mmap=True)
-    reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
-    for prompt in tqdm.tqdm(prompts):
+    for prompt in tqdm.tqdm(prompts, desc=f"Retrieving {k} documents"):
 
         prompt_token = bm25s.tokenize(prompt.question, stopwords=stopwords,
                                       show_progress=False, return_ids=False)
-        res = retriever.retrieve(prompt_token, k=20,
+        res = retriever.retrieve(prompt_token, k=k,
                                  show_progress=False)
 
         indexes.append(
@@ -65,18 +64,10 @@ def prompt_lst(prompts: List[UnansweredQuestion],
             }
         )
 
-        # question_and_text = [(prompt.question, doc["text"])
-        #                      for doc in res.documents[0]]
-        # scores = reranker.predict(question_and_text)
-        # ranked_docs = sorted(
-        #     zip(scores, res.documents[0]), key=lambda x: x[0], reverse=True)
-        ranked_docs = res.documents[0]
-        top_docs = [doc for _, doc in ranked_docs[:k]]
-
         for i in range(k):
             indexes[ind].update({
                 f"section_{i + 1}": get_file_info(str(
-                    top_docs[i]["text"]
+                    res.documents[0][i]['text']
                     ), full_data)
             })
         result.append(
@@ -91,7 +82,7 @@ def prompt_lst(prompts: List[UnansweredQuestion],
     return result
 
 
-def get_sources(sources):
+def get_sources(sources: Dict[str, Any]) -> List[MinimalSource]:
     try:
         max_ind = 1
         while 1:

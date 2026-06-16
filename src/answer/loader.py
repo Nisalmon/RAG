@@ -1,14 +1,15 @@
 import json
 from src.classes import MinimalSearchResults, MinimalSource
+from typing import List, Dict, Any
 
 
-def load_answered_question():
+def load_answered_question() -> List[MinimalSearchResults]:
     files = [
         "./datasets_public/public/AnsweredQuestions/dataset_code_public.json",
         "./datasets_public/public/AnsweredQuestions/dataset_docs_public.json"
     ]
     try:
-        answered_questions = []
+        answered_questions: List[MinimalSearchResults] = []
         code = []
         docs = []
         with open(files[0], "r") as f:
@@ -22,7 +23,8 @@ def load_answered_question():
         return []
 
 
-def fill_questions(answered_questions, code, docs):
+def fill_questions(answered_questions: List[MinimalSearchResults],
+                   code: Dict[str, Any], docs: Dict[str, Any]) -> None:
     for question in code["rag_questions"]:
         answered_questions.append(
             MinimalSearchResults(
@@ -31,8 +33,10 @@ def fill_questions(answered_questions, code, docs):
                 retrieved_sources=[
                     MinimalSource(
                         file_path=question["sources"][0]["file_path"],
-                        first_character_index=question["sources"][0]["first_character_index"],
-                        last_character_index=question["sources"][0]["last_character_index"],
+                        first_character_index=question["sources"][0]
+                        ["first_character_index"],
+                        last_character_index=question["sources"][0]
+                        ["last_character_index"],
                         text=""
                     )
                 ]
@@ -46,8 +50,10 @@ def fill_questions(answered_questions, code, docs):
                 retrieved_sources=[
                     MinimalSource(
                         file_path=question["sources"][0]["file_path"],
-                        first_character_index=question["sources"][0]["first_character_index"],
-                        last_character_index=question["sources"][0]["last_character_index"],
+                        first_character_index=question["sources"][0]
+                        ["first_character_index"],
+                        last_character_index=question["sources"][0]
+                        ["last_character_index"],
                         text=""
                     )
                 ]

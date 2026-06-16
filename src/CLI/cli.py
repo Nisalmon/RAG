@@ -18,11 +18,13 @@ from src.recall import recall_at_k
 from llm_sdk import Model
 from src.classes import (StudentSearchResults, MinimalAnswer,
                          StudentSearchResultsAndAnswer,
-                         UnansweredQuestion)
+                         UnansweredQuestion,
+                         MinimalSearchResults)
 
 # OTHER IMPORTS
 import tqdm
 import time
+from typing import List
 
 
 class CLI():
@@ -102,7 +104,7 @@ class CLI():
             print(answer[-1])
 
     def answer_datasets(self, student_search_results_path: str,
-                        save_directory: str):
+                        save_directory: str) -> None:
         dataset = load_dataset(student_search_results_path)
         if dataset == []:
             print("No dataset has been found.")
@@ -111,7 +113,7 @@ class CLI():
         print(f"Loaded {len(dataset)} questions from " +
               f"{student_search_results_path}")
         augmented_prompt = augment_prompt(dataset)
-        answer = []
+        answer: List[MinimalAnswer | MinimalSearchResults] = []
         count = 0
         for question in tqdm.tqdm(augmented_prompt,
                                   desc="Generating answers..."):
@@ -142,20 +144,23 @@ class CLI():
         data = load_data()
         chunked_data = chunking(data, max_context_length)
         dataset = load_answers(dataset_path)
-        search_result = load_dataset(student_answer_path)
-        prompts = []
-        for data in search_result:
+        search_result: List[MinimalSearchResults] = load_dataset(
+            student_answer_path)
+        prompts: List[UnansweredQuestion] = []
+        for result in search_result:
+            if not isinstance(result, MinimalSearchResults):
+                continue
             prompts.append(
                 UnansweredQuestion(
-                    question_id=data.question_id,
-                    question=data.question
+                    question_id=result.question_id,
+                    question=result.question
                 )
             )
         print("Evaluation Results")
         print("=" * 30)
         print("Question evaluated:", len(dataset))
         for recall in test:
-            value = []
+            values = []
             if recall > k:
                 break
             retrieval = get_most_accurate(
@@ -166,8 +171,8 @@ class CLI():
             for elem in retrieval:
                 for question in dataset:
                     if elem.question == question.question:
-                        value.append(recall_at_k(question.sources,
-                                                 elem.retrieved_sources))
+                        values.append(recall_at_k(question.sources,
+                                                  elem.retrieved_sources))
 
-            moyenne = sum(1 for nb in value if nb == 1.0)/len(value)
+            moyenne = sum(1 for nb in values if nb == 1.0)/len(values)
             print(f"Recall@{recall}: {moyenne}")
