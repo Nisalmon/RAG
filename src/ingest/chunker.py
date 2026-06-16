@@ -14,7 +14,7 @@ def chunking(data: List[List[Dict[str, Any]]],
 def chunk_python(data: List[Dict[str, Any]],
                  lst: List[MinimalSource], maxchunk: int) -> None:
     config = {
-         "max_chunk_size": min(maxchunk, 2000),
+         "max_chunk_size": maxchunk if maxchunk < 2000 else 2000,
          "language": "python",
          "metadata_template": "default"
     }
@@ -25,7 +25,6 @@ def chunk_python(data: List[Dict[str, Any]],
         for chunk in chunks:
             start_line = chunk["metadata"]["start_line_no"]
             end_line = chunk["metadata"]["end_line_no"]
-
             lines = code["content"].splitlines(keepends=True)
 
             start = sum(len(line) for line in lines[:start_line])

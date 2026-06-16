@@ -9,6 +9,13 @@ import json
 
 
 def store_processed_data(chunked_data: List[MinimalSource]) -> None:
+    '''
+    PARAMETERS:
+        chunked_data: List[MinimalSource]
+
+    BEHAVIOR:
+        This function is used to store the chunk in a json file.
+    '''
     Path("data/processed").mkdir(parents=True, exist_ok=True)
     serialized_data = [obj.__dict__ for obj in chunked_data]
     with open("./data/processed/processed_data.json", "w") as f:
@@ -17,6 +24,12 @@ def store_processed_data(chunked_data: List[MinimalSource]) -> None:
 
 def store_search_result(result: StudentSearchResults,
                         file_path: str, file_name: str | None = None) -> None:
+    '''
+    PARAMETERS:
+        result: StudentSearchResults
+        file_path: str,
+        file_name: str | None
+    '''
     Path(file_path).mkdir(parents=True, exist_ok=True)
     serialized_data = {
         "search_results": [

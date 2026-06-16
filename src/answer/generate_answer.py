@@ -4,6 +4,18 @@ from torch.nn.modules import Module
 
 
 def generate_answer(model: Model, prompt: str) -> str:
+    '''
+    PARAMETERS:
+        model: Model. The LLM
+        prompt: str. The prompt to answer
+
+    BEHAVIOR:
+        This function is used to generate an answer to given prompt
+        using the given LLM.
+
+    RETURN:
+        str
+    '''
 
     full_prompt = (
         "<|im_start|>user\n"

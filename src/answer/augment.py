@@ -3,6 +3,16 @@ from src.classes import MinimalSearchResults
 
 
 def get_resources(prompt: MinimalSearchResults) -> str:
+    '''
+    PARAMETERS:
+        prompt: MinimalSearchResults. The prompt with retrieved documents.
+
+    BEHAVIOR:
+        This function is used to return a string of the retrieved documents.
+
+    RETURN:
+        str
+    '''
     text = ""
     for elem in prompt.retrieved_sources:
         text += f"{elem.file_path}\n"
@@ -11,6 +21,16 @@ def get_resources(prompt: MinimalSearchResults) -> str:
 
 
 def augment_prompt(prompts: List[MinimalSearchResults]) -> List[str]:
+    '''
+    PARAMETERS:
+        prompt: List[MinimalSearchResults].
+
+    BEHAVIOR:
+        This function is used to add context to the prompts.
+
+    RETURN:
+        List[str]
+    '''
     augmented_prompt = []
     sentences = [
         "You have to answer the following question using given resources.\n",

@@ -4,6 +4,13 @@ from typing import List, Dict, Any
 
 
 def load_answered_question() -> List[MinimalSearchResults]:
+    '''
+    BEHAVIOR:
+        This function loads all the AnsweredQuestions JSON file.
+
+    RETURN:
+        List[MinimalSearchResults]
+    '''
     files = [
         "./datasets_public/public/AnsweredQuestions/dataset_code_public.json",
         "./datasets_public/public/AnsweredQuestions/dataset_docs_public.json"
@@ -25,6 +32,15 @@ def load_answered_question() -> List[MinimalSearchResults]:
 
 def fill_questions(answered_questions: List[MinimalSearchResults],
                    code: Dict[str, Any], docs: Dict[str, Any]) -> None:
+    '''
+    PARAMETERS:
+        answered_questions: List[MinimalSearchResults]. The list to fill.
+        code: Dict[str, Any]. The AnsweredQuestion code dataset.
+        docs: Dict[str, Any]. The AnsweredQuestion docs dataset.
+
+    BEHAVIOR:
+        Fill the given list with AnsweredQuestion object.
+    '''
     for question in code["rag_questions"]:
         answered_questions.append(
             MinimalSearchResults(
