@@ -4,6 +4,7 @@ from .minimalsearchresults import MinimalSearchResults
 from .minimalanswer import MinimalAnswer
 from .studentssearchresults import (StudentSearchResults,
                                     StudentSearchResultsAndAnswer)
+from .ragdataset import RagDataset
 
 
 __all__ = [
@@ -13,5 +14,6 @@ __all__ = [
     "MinimalSearchResults",
     "MinimalAnswer",
     "StudentSearchResults",
-    "StudentSearchResultsAndAnswer"
+    "StudentSearchResultsAndAnswer",
+    "RagDataset"
 ]

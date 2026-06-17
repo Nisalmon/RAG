@@ -19,7 +19,8 @@ from llm_sdk import Model
 from src.classes import (StudentSearchResults, MinimalAnswer,
                          StudentSearchResultsAndAnswer,
                          UnansweredQuestion,
-                         MinimalSearchResults)
+                         MinimalSearchResults,
+                         RagDataset, AnsweredQuestion)
 
 # OTHER IMPORTS
 import tqdm
@@ -205,6 +206,12 @@ class CLI():
         data = load_data()
         chunked_data = chunking(data, max_context_length)
         dataset = load_answers(dataset_path)
+        qst: List[UnansweredQuestion | AnsweredQuestion] = []
+        for q in dataset:
+            qst.append(q)
+        rag_dataset = RagDataset(
+            rag_questions=qst
+        )
         search_result: List[MinimalSearchResults] = load_dataset(
             student_answer_path)
         prompts: List[UnansweredQuestion] = []
@@ -219,7 +226,7 @@ class CLI():
             )
         print("Evaluation Results")
         print("=" * 30)
-        print("Question evaluated:", len(dataset))
+        print("Question evaluated:", len(rag_dataset.rag_questions))
         for recall in test:
             values = []
             if recall > k:
