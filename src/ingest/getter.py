@@ -5,6 +5,18 @@ import tqdm
 
 
 def get_file_info(content: str, files: List[MinimalSource]) -> Dict[str, Any]:
+    '''
+    PARAMETERS:
+        content: str
+        files: List[MinimalSource]
+
+    BEHAVIOR:
+        This function returns the inforamtion of a file.
+        Such as file_path, text
+
+    RETURN:
+        Dict[str, Any]
+    '''
     for elem in files:
         if elem.text == content:
             return {
@@ -17,6 +29,13 @@ def get_file_info(content: str, files: List[MinimalSource]) -> Dict[str, Any]:
 
 
 def get_index(data: List[str]) -> None:
+    '''
+    PARAMETERS:
+        data: List[str]
+
+    BEHAVIOR:
+        This function index all the data
+    '''
     data_tokens = bm25s.tokenize(data, show_progress=False)
     ind = bm25s.BM25(corpus=data)
     ind.index(data_tokens, show_progress=False)
@@ -25,6 +44,18 @@ def get_index(data: List[str]) -> None:
 
 def get_most_accurate(prompts: List[UnansweredQuestion] | str,
                       k: int, full_data: List[MinimalSource]) -> List[Any]:
+    '''
+    PARAMETERS:
+        prompts: List[UnansweredQuestion] | str
+        k: int
+        full_data: List[MinimalSource]
+
+    BEHAVIOR:
+        This function returns a list of retrieved documents for each prompt.
+
+    RETURN:
+        List[Any]
+    '''
     retrieval = []
     stopwords = [
         "a", "an", "the"
@@ -46,6 +77,19 @@ def get_most_accurate(prompts: List[UnansweredQuestion] | str,
 def prompt_lst(prompts: List[UnansweredQuestion],
                k: int, full_data: List[MinimalSource],
                stopwords: List[str]) -> List[MinimalSearchResults]:
+    '''
+    PARAMETERS:
+        prompts: List[UnansweredQuestion]
+        k: int
+        full_data: List[MinimalSource]
+        stopwords: List[str]
+
+    BEHAVIOR:
+        This function retrieve k documents for each prompt.
+
+    RETURN:
+        List[MinimalSearchResults]
+    '''
     ind = 0
     indexes = []
     result = []
@@ -83,6 +127,16 @@ def prompt_lst(prompts: List[UnansweredQuestion],
 
 
 def get_sources(sources: Dict[str, Any]) -> List[MinimalSource]:
+    '''
+    PARAMETERS:
+        sources: Dict[str, Any]
+
+    BEHAVIOR:
+        This function return all the MinimalSource stored in sources.
+
+    RETURN:
+        List[MinimalSource]
+    '''
     try:
         max_ind = 1
         while 1:

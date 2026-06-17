@@ -8,6 +8,13 @@ import json
 
 
 def load_data() -> List[List[Dict[str, str]]]:
+    '''
+    BEHAVIOR:
+        This function loads all the python/markown file in the vllm folder.
+
+    RETURN:
+        List[List[Dict[str, str]]]
+    '''
     data: List[Any] = [[], []]
     res = Path("./data/raw/vllm-0.10.1")
     for file in res.rglob("*"):
@@ -22,6 +29,17 @@ def load_data() -> List[List[Dict[str, str]]]:
 
 
 def load_prompts(file_path: str) -> List[UnansweredQuestion]:
+    '''
+    PARAMETERS:
+        file_path: str
+
+    BEHAVIOR:
+        This function load all the UnansweredQuestion stored in the given
+        json file_path.
+
+    RETURN:
+        List[UnansweredQuestion]
+    '''
     prompts = []
     try:
         with open(file_path, "r") as f:
@@ -41,6 +59,16 @@ def load_prompts(file_path: str) -> List[UnansweredQuestion]:
 
 
 def load_single_prompt(prompt: str) -> List[UnansweredQuestion]:
+    '''
+    PARAMETERS:
+        prompt: str
+
+    BEHAVIOR:
+        This function return a list containing a single UnansweredQuestion
+
+    RETURN:
+        List[UnansweredQuestion]
+    '''
     return ([UnansweredQuestion(
         question_id="1",
         question=prompt
@@ -48,6 +76,14 @@ def load_single_prompt(prompt: str) -> List[UnansweredQuestion]:
 
 
 def load_chunks() -> List[MinimalSource]:
+    '''
+    BEHAVIOR:
+        This function loads all the chunks stored in a file created
+        after indexing
+
+    RETURN:
+        List[MinimalSource]
+    '''
     chunks = []
     try:
         data = []
@@ -67,6 +103,17 @@ def load_chunks() -> List[MinimalSource]:
 
 
 def load_dataset(file_path: str) -> List[MinimalSearchResults]:
+    '''
+    PARAMETERS:
+        file_path: str
+
+    BEHAVIOR:
+        This function loads all the MinimalSearhResults stored in the
+        given json file_path
+
+    RETURN:
+        List[MinimalSearchResults]
+    '''
     result: List[MinimalSearchResults] = []
     try:
         data = []
@@ -86,6 +133,17 @@ def load_dataset(file_path: str) -> List[MinimalSearchResults]:
 
 
 def load_answers(file_path: str) -> List[AnsweredQuestion]:
+    '''
+    PARAMETERS:
+        file_path: str
+
+    BEHAVIOR:
+        This function loads all the AnsweredQuestion stored in the
+        given json file_path
+
+    RETURN:
+        List[AnsweredQuestion]
+    '''
     answer = []
     try:
         with open(file_path, "r") as f:

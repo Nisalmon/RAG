@@ -29,6 +29,9 @@ def store_search_result(result: StudentSearchResults,
         result: StudentSearchResults
         file_path: str,
         file_name: str | None
+
+    BEHAVIOR:
+        This function is used to store the results in a json file.
     '''
     Path(file_path).mkdir(parents=True, exist_ok=True)
     serialized_data = {
@@ -51,6 +54,15 @@ def store_search_result(result: StudentSearchResults,
 
 def store_answers(answers: List[StudentSearchResultsAndAnswer], file_path: str,
                   file_name: str | None = None) -> None:
+    '''
+    PARAMETERS:
+        answers: List[StudentSearchResultsAndAnswer]
+        file_path: str
+        file_name: str | None
+
+    BEHAVIOR:
+        This function is used to store the answers in a json file.
+    '''
     Path(file_path).mkdir(parents=True, exist_ok=True)
     serialized_data: Dict[str, Any] = {
         "search_results": [],

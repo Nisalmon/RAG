@@ -28,10 +28,21 @@ from typing import List
 
 
 class CLI():
+    '''
+    Class CLI:
+        This class is used everytime the user start the program
+    '''
     def __init__(self) -> None:
         self.model = Model()
 
     def index(self, max_chunk_size: int = 2000) -> None:
+        '''
+        PARAMETERS:
+            max_chunk_size: int
+
+        BEHAVIOR:
+            This function store all the chunks and index them using BM25.
+        '''
         print("Loading data")
         data = load_data()
 
@@ -52,6 +63,16 @@ class CLI():
 
     def search(self, question: str, k: int = 5,
                save_directory: str = "./") -> None:
+        '''
+        PARAMETERS:
+            question: str
+            k: int
+            save_directory: str
+
+        BEHVIOR:
+            This function retrieved k documents for the given question
+            and store the result in save_directory.
+        '''
         prompt = load_single_prompt(question)
         chunks = load_chunks()
         retrievial = get_most_accurate(
@@ -68,6 +89,16 @@ class CLI():
 
     def search_datasets(self, dataset_path: str, k: int = 5,
                         save_directory: str = "./") -> None:
+        '''
+        PARAMETERS:
+            dataset_path: str
+            k: int
+            save_directory: str
+
+        BEHVIOR:
+            This function retrieved k documents for the questions in the
+            dataset file and store the result in save_directory.
+        '''
         prompts = load_prompts(dataset_path)
         chunks = load_chunks()
         start = time.time()
@@ -86,6 +117,15 @@ class CLI():
                             save_directory, dataset_path)
 
     def answer(self, question: str, k: int = 5) -> None:
+        '''
+        PARAMETERS:
+            question: str
+            k: int
+
+        BEHAVIOR:
+            This function answer the given question and print the result on
+            screen
+        '''
         prompt = load_single_prompt(question)
         chunks = load_chunks()
         if chunks == []:
@@ -105,6 +145,16 @@ class CLI():
 
     def answer_datasets(self, student_search_results_path: str,
                         save_directory: str) -> None:
+        '''
+        PARAMETERS:
+            student_search_results_path: str
+            save_directory: str
+
+        BEHAVIOR:
+            This function answer all the question in the
+            student_search_results_path and save the results in
+            save_directory
+        '''
         dataset = load_dataset(student_search_results_path)
         if dataset == []:
             print("No dataset has been found.")
@@ -134,6 +184,17 @@ class CLI():
 
     def evaluate(self, student_answer_path: str, dataset_path: str,
                  k: int, max_context_length: int) -> None:
+        '''
+        PARAMETERS:
+            student_answer_path: str
+            dataset_path: str
+            k: int
+            max_context_length: int
+
+        BEHAVIOR:
+            This function recall for k retrieved documents and given a
+            percentage precision for the retrieved documents
+        '''
         if k > 20 or k <= 0:
             print("You must retrieve a number of data higher than 1 " +
                   "and up to 20.")

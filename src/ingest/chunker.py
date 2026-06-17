@@ -5,6 +5,17 @@ from typing import List, Dict, Any
 
 def chunking(data: List[List[Dict[str, Any]]],
              maxchunk: int) -> List[MinimalSource]:
+    '''
+    PARAMETERS:
+        data: List[List[Dict[str, Any]]]
+        maxchunk: int
+
+    BEHAVIOR:
+        This function chunks all the data stored in data
+
+    RETURN:
+        List[MinimalSource]
+    '''
     chunk_lst: List[MinimalSource] = []
     chunk_python(data[0], chunk_lst, maxchunk)
     chunk_markdown(data[1], chunk_lst, maxchunk)
@@ -13,6 +24,14 @@ def chunking(data: List[List[Dict[str, Any]]],
 
 def chunk_python(data: List[Dict[str, Any]],
                  lst: List[MinimalSource], maxchunk: int) -> None:
+    '''
+    PARAMETERS:
+        data: List[Dict[str, Any]]
+        lst: List[MinimalSource]
+
+    BEHAVIOR:
+        This function fills lst with chunks of python file
+    '''
     config = {
          "max_chunk_size": maxchunk if maxchunk < 2000 else 2000,
          "language": "python",
@@ -41,6 +60,14 @@ def chunk_python(data: List[Dict[str, Any]],
 
 def chunk_markdown(data: List[Dict[str, Any]],
                    lst: List[MinimalSource], maxchunk: int) -> None:
+    '''
+    PARAMETERS:
+        data: List[Dict[str, Any]]
+        lst: List[MinimalSource]
+
+    BEHAVIOR:
+        This function fills lst with chunks of markdown file
+    '''
     for elem in data:
         ind = 0
         fst_chr = ind
