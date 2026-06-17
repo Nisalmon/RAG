@@ -31,10 +31,10 @@ For exemple:
 
 
 ### Resources
-[The BM25s documentation](https://bm25s.github.io/)
-[The astchunk documentation](https://github.com/yilinjz/astchunk)
+[The BM25s documentation](https://bm25s.github.io/)  
+[The astchunk documentation](https://github.com/yilinjz/astchunk)  
 AI was used to review strategies on the best way to chunk all the files
-and to improve the recall value.
+and to improve the recall value.  
 
 
 ### System architecture
@@ -55,17 +55,17 @@ The Markdown files are chunked by looping on their content and when the program 
 
 ### Retrieval method
 The retrieval is done with the bm25s package.
-It loads the indexed chunks, tokenize them.
-Tokenize the prompt.
+It loads the indexed chunks, tokenize them.  
+Tokenize the prompt.  
 And return a list containg, in order, the best k documents for the prompt.
 
 
 ### Performance analysis
 For this project when using Recall@5, we use achieve 80% for docs questions and 50% for code questions.
 
-My program achieve 79% for docs questions ans 52% for code questions.
-I managed to achieve 83% for docs question but it increased the retrieving time from 6sec for 100 prompts to 25sec for 100 prompts. So I when back to my 79%.
-I rather have 1% less than 20 more sec to wait because in the subject it is asked to retrieve 5 documents for 1000 prompt in 90 second and it wasn't possible when I was hitting 83%.
+My program achieve 79% for docs questions ans 52% for code questions.  
+I managed to achieve 83% for docs question but it increased the retrieving time from 6sec for 100 prompts to 25sec for 100 prompts. So I when back to my 79%.  
+I rather have 1% less than 20 more sec to wait because in the subject it is asked to retrieve 5 documents for 1000 prompt in 90 second and it wasn't possible when I was hitting 83%.  
 
 
 ### Design decisions
