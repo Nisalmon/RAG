@@ -41,7 +41,7 @@ def augment_prompt(prompts: List[MinimalSearchResults]) -> List[str]:
     for prompt in prompts:
         res += sentences[0]
         res += sentences[1]
-        res += prompt.question
+        res += prompt.question_str
         res += sentences[2]
         res += get_resources(prompt)
         augmented_prompt.append(res)

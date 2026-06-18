@@ -117,7 +117,7 @@ def prompt_lst(prompts: List[UnansweredQuestion],
         result.append(
             MinimalSearchResults(
                 question_id=indexes[ind]["prompt_id"],
-                question=indexes[ind]["prompt"],
+                question_str=indexes[ind]["prompt"],
                 retrieved_sources=get_sources(indexes[ind])
             )
         )

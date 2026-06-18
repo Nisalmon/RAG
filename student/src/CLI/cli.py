@@ -172,7 +172,7 @@ class CLI():
         for question in tqdm.tqdm(augmented_prompt,
                                   desc="Generating answers..."):
             answer.append(MinimalAnswer(
-                question=dataset[count].question,
+                question_str=dataset[count].question_str,
                 question_id=dataset[count].question_id,
                 retrieved_sources=dataset[count].retrieved_sources,
                 answer=generate_answer(self.model, question)
@@ -227,7 +227,7 @@ class CLI():
             prompts.append(
                 UnansweredQuestion(
                     question_id=result.question_id,
-                    question=result.question
+                    question=result.question_str
                 )
             )
         print("Evaluation Results")
@@ -244,7 +244,7 @@ class CLI():
             )
             for elem in retrieval:
                 for question in dataset:
-                    if elem.question == question.question:
+                    if elem.question_str == question.question:
                         values.append(recall_at_k(question.sources,
                                                   elem.retrieved_sources))
 

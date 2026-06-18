@@ -45,7 +45,7 @@ def fill_questions(answered_questions: List[MinimalSearchResults],
         answered_questions.append(
             MinimalSearchResults(
                 question_id=question["question_id"],
-                question=question["question"],
+                question_str=question["question"],
                 retrieved_sources=[
                     MinimalSource(
                         file_path=question["sources"][0]["file_path"],
@@ -62,7 +62,7 @@ def fill_questions(answered_questions: List[MinimalSearchResults],
         answered_questions.append(
             MinimalSearchResults(
                 question_id=question["question_id"],
-                question=question["question"],
+                question_str=question["question"],
                 retrieved_sources=[
                     MinimalSource(
                         file_path=question["sources"][0]["file_path"],
