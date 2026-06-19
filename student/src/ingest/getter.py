@@ -3,6 +3,8 @@ from typing import List, Dict, Any
 from src.classes import MinimalSource, UnansweredQuestion, MinimalSearchResults
 import tqdm
 
+from sentence_transformers import CrossEncoder
+
 
 def get_file_info(content: str, files: List[MinimalSource]) -> Dict[str, Any]:
     '''
@@ -43,7 +45,8 @@ def get_index(data: List[str]) -> None:
 
 
 def get_most_accurate(prompts: List[UnansweredQuestion] | str,
-                      k: int, full_data: List[MinimalSource]) -> List[Any]:
+                      k: int, full_data: List[MinimalSource],
+                      question_type: str | None = None) -> List[Any]:
     '''
     PARAMETERS:
         prompts: List[UnansweredQuestion] | str
@@ -70,13 +73,14 @@ def get_most_accurate(prompts: List[UnansweredQuestion] | str,
         )]
     if isinstance(prompts, List):
         retrieval = prompt_lst(prompts, k, full_data,
-                               stopwords)
+                               stopwords, question_type)
     return retrieval
 
 
 def prompt_lst(prompts: List[UnansweredQuestion],
                k: int, full_data: List[MinimalSource],
-               stopwords: List[str]) -> List[MinimalSearchResults]:
+               stopwords: List[str],
+               question_type: str | None = None) -> List[MinimalSearchResults]:
     '''
     PARAMETERS:
         prompts: List[UnansweredQuestion]
@@ -94,26 +98,48 @@ def prompt_lst(prompts: List[UnansweredQuestion],
     indexes = []
     result = []
     retriever = bm25s.BM25.load("bm25_index", load_corpus=True, mmap=True)
+    reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
     for prompt in tqdm.tqdm(prompts, desc=f"Retrieving {k} documents"):
 
         prompt_token = bm25s.tokenize(prompt.question, stopwords=stopwords,
                                       show_progress=False, return_ids=False)
-        res = retriever.retrieve(prompt_token, k=k,
+        res = retriever.retrieve(prompt_token, k=20,
                                  show_progress=False)
 
+        docs = res.documents[0]
+        pairs = [
+            [prompt.question, doc["text"]]
+            for doc in docs
+        ]
+        scores = reranker.predict(pairs)
+        ranked_docs = [
+            doc
+            for _, doc in sorted(
+                zip(scores, docs),
+                key=lambda x: x[0],
+                reverse=True
+            )
+        ]
         indexes.append(
             {
                 "prompt": prompt.question,
                 "prompt_id": prompt.question_id
             }
         )
-
-        for i in range(k):
-            indexes[ind].update({
-                f"section_{i + 1}": get_file_info(str(
-                    res.documents[0][i]['text']
-                    ), full_data)
-            })
+        if question_type and question_type == "code":
+            for i in range(k):
+                indexes[ind].update({
+                    f"section_{i + 1}": get_file_info(str(
+                        ranked_docs[i]['text']
+                        ), full_data)
+                })
+        else:
+            for i in range(k):
+                indexes[ind].update({
+                    f"section_{i + 1}": get_file_info(str(
+                        res.documents[0][i]['text']
+                        ), full_data)
+                })
         result.append(
             MinimalSearchResults(
                 question_id=indexes[ind]["prompt_id"],

@@ -1,7 +1,8 @@
 from src.classes import MinimalSource
+from typing import Any
 
 
-def compute_overlap(a: MinimalSource, b: MinimalSource) -> int:
+def compute_overlap(a: MinimalSource, b: MinimalSource) -> Any:
     '''
     PARAMETERS:
         a: MinimalSource
@@ -27,7 +28,7 @@ def compute_overlap(a: MinimalSource, b: MinimalSource) -> int:
     return max(0, end - start)
 
 
-def overlap_ratio(correct: MinimalSource, retrieved: MinimalSource) -> float:
+def overlap_ratio(correct: MinimalSource, retrieved: MinimalSource) -> Any:
     '''
     PARAMETERS:
         correct: MinimalSource. The reference source.

@@ -22,7 +22,7 @@ def load_data() -> List[List[Dict[str, str]]]:
             continue
         tpe = 0 if file.suffix == ".py" else 1
         data[tpe].append({
-            "path": str(file.as_posix()),
+            "path": str(file),
             "content": file.read_text(encoding="utf-8")
         })
     return data
@@ -87,7 +87,8 @@ def load_chunks() -> List[MinimalSource]:
     chunks = []
     try:
         data = []
-        with open("data/processed/processed_data.json", "r", encoding="utf-8") as f:
+        with open("data/processed/processed_data.json", "r",
+                  encoding="utf-8") as f:
             data = json.load(f)
         for chunk in data:
             chunks.append(

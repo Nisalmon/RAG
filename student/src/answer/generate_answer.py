@@ -1,6 +1,5 @@
 from src.llm_sdk import Model
 import torch
-from torch.nn.modules import Module
 
 
 def generate_answer(model: Model, prompt: str) -> str:
@@ -33,8 +32,6 @@ def generate_answer(model: Model, prompt: str) -> str:
     with torch.no_grad():
         eos = model.tokenizer.eos_token_id
         pad = model.tokenizer.eos_token_id
-        if not isinstance(model.model.generate, Module):
-            return ""
         output = model.model.generate(input_ids,
                                       attention_mask=attention_mask,
                                       max_new_tokens=256,

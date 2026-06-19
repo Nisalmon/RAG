@@ -23,48 +23,13 @@ def chunking(data: List[List[Dict[str, Any]]],
     return chunk_lst
 
 
-def chunk_python(data: List[Dict[str, Any]],
-                 lst: List[MinimalSource], maxchunk: int) -> None:
-    '''
-    PARAMETERS:
-        data: List[Dict[str, Any]]
-        lst: List[MinimalSource]
-
-    BEHAVIOR:
-        This function fills lst with chunks of python file
-    '''
-    config = {
-         "max_chunk_size": maxchunk if maxchunk < 2000 else 2000,
-         "language": "python",
-         "metadata_template": "default"
-    }
-    chunk_builder = ASTChunkBuilder(**config)
-
-    for code in data:
-        chunks = chunk_builder.chunkify(code['content'])
-        for chunk in chunks:
-            start_line = chunk["metadata"]["start_line_no"]
-            end_line = chunk["metadata"]["end_line_no"]
-            lines = code["content"].splitlines(keepends=True)
-
-            start = sum(len(line) for line in lines[:start_line])
-            end = sum(len(line) for line in lines[:end_line + 1])
-            lst.append(
-                MinimalSource(
-                    file_path=code['path'],
-                    first_character_index=start,
-                    last_character_index=end,
-                    text=str(chunk["content"])
-                )
-            )
-
-
 def chunk_markdown(data: List[Dict[str, Any]],
                    lst: List[MinimalSource], maxchunk: int) -> None:
     '''
     PARAMETERS:
         data: List[Dict[str, Any]]
         lst: List[MinimalSource]
+        maxchunk: int
 
     BEHAVIOR:
         This function fills lst with chunks of markdown file
@@ -80,7 +45,7 @@ def chunk_markdown(data: List[Dict[str, Any]],
                or (nb_chr >= 2000 or nb_chr >= maxchunk)):
                 lst.append(
                     MinimalSource(
-                        file_path=elem["path"],
+                        file_path=elem["path"].replace("../", ""),
                         first_character_index=fst_chr,
                         last_character_index=ind,
                         text=str(elem["content"][fst_chr:ind])
@@ -93,7 +58,7 @@ def chunk_markdown(data: List[Dict[str, Any]],
             ind += 1
         lst.append(
                     MinimalSource(
-                        file_path=elem["path"],
+                        file_path=elem["path"].replace("../", ""),
                         first_character_index=fst_chr,
                         last_character_index=len(elem["content"]),
                         text=str(elem["content"][fst_chr:ind])
@@ -104,7 +69,16 @@ def chunk_markdown(data: List[Dict[str, Any]],
 def chunk_by_ast_py(
         python: List[Dict[str, Any]],
         lst: List[MinimalSource],
-        max_char: int = 2000) -> List[MinimalSource]:
+        max_char: int = 2000) -> None:
+    '''
+    PARAMETERS:
+        data: List[Dict[str, Any]]
+        lst: List[MinimalSource]
+        max_char: int
+
+    BEHAVIOR:
+        This function fills lst with chunks of python file
+    '''
     try:
         for file in tqdm.tqdm(python):
             code = file["content"]
@@ -129,7 +103,7 @@ def chunk_by_ast_py(
                 for sub_chunk in sub_chunks:
                     lst.append(
                         MinimalSource(
-                            file_path=str(file["path"]),
+                            file_path=str(file["path"].replace("../", "")),
                             first_character_index=start,
                             last_character_index=start + len(sub_chunk),
                             text=sub_chunk

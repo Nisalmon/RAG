@@ -1,4 +1,4 @@
-from src.classes import MinimalSearchResults
+from .minimalsearchresults import MinimalSearchResults
 
 
 class MinimalAnswer(MinimalSearchResults):

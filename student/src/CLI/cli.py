@@ -106,10 +106,12 @@ class CLI():
         prompts = load_prompts(dataset_path)
         chunks = load_chunks()
         start = time.time()
+        question_type = "code" if "code" in dataset_path else ""
         retrievial = get_most_accurate(
             prompts,
             k,
-            chunks
+            chunks,
+            question_type
         )
         student_search_result = StudentSearchResults(
             search_results=retrievial,
@@ -230,6 +232,7 @@ class CLI():
                     question=result.question_str
                 )
             )
+        question_type = "code" if "code" in dataset_path else ""
         print("Evaluation Results")
         print("=" * 30)
         print("Question evaluated:", len(rag_dataset.rag_questions))
@@ -240,7 +243,8 @@ class CLI():
             retrieval = get_most_accurate(
                 prompts,
                 recall,
-                chunked_data
+                chunked_data,
+                question_type
             )
             for elem in retrieval:
                 for question in dataset:
@@ -249,7 +253,7 @@ class CLI():
                                                   elem.retrieved_sources))
 
             if values == []:
-                moyenne = 0
+                moyenne = 0.0
             else:
                 moyenne = sum(1 for nb in values if nb == 1.0)/len(values)
             print(f"Recall@{recall}: {moyenne}")
